@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+//Constants
+const String USER_INFO ="currentUser";
 //URL
-const String termAndPrivacyUrl = "https://workid.ca/policy";
-const String productionServerUrl = "https://workid.ca";
-const String productionSocketUrl = "https://s.workid.ca";
-const String deBuggingServerUrl = "https://api.dev.workid.ca/";
-const String deBuggingSocketUrl = "https://s.dev.workid.ca";
+const String termAndPrivacyUrl = "workid.ca/policy";
+const String serverUrl = "workid.ca";
+const String socketUrl = "s.workid.ca";
+const String deBuggingServerUrl = "api.dev.workid.ca/";
+const String deBuggingSocketUrl = "s.dev.workid.ca";
 
 //FONT SIZE
 const double smallFontSize = 12;

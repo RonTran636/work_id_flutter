@@ -1,5 +1,5 @@
 import 'package:work_id/constant/constant.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:work_id/models/account.dart';
 
 class Common {
   static late Account currentUser;

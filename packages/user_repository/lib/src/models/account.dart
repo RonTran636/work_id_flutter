@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Account extends Equatable {
 	final int? customerId;
-	final int? workid;
+	final int? workId;
 	final dynamic fcmToken;
 	final dynamic photoUrl;
 	final String? customerName;
@@ -14,7 +14,7 @@ class Account extends Equatable {
 
 	const Account({
 		this.customerId,
-		this.workid,
+		this.workId,
 		this.fcmToken,
 		this.photoUrl,
 		this.customerName,
@@ -27,13 +27,13 @@ class Account extends Equatable {
 
 	@override
 	String toString() {
-		return 'Account(customerId: $customerId, workid: $workid, fcmToken: $fcmToken, photoUrl: $photoUrl, customerName: $customerName, customerEmail: $customerEmail, customerPhone: $customerPhone, token: $token, lastLogin: $lastLogin, isActive: $isActive)';
+		return 'Account(customerId: $customerId, workid: $workId, fcmToken: $fcmToken, photoUrl: $photoUrl, customerName: $customerName, customerEmail: $customerEmail, customerPhone: $customerPhone, token: $token, lastLogin: $lastLogin, isActive: $isActive)';
 	}
 
 	factory Account.fromJson(Map<String, dynamic> json) {
 		return Account(
 			customerId: json['customer_id'] as int,
-			workid: json['workid'] as int,
+			workId: json['workid'] as int,
 			fcmToken: json['fcm_token'] as dynamic,
 			photoUrl: json['photo_url'] as dynamic,
 			customerName: json['customer_name'] as String,
@@ -48,7 +48,7 @@ class Account extends Equatable {
 	Map<String, dynamic> toJson() {
 		return {
 			'customer_id': customerId,
-			'workid': workid,
+			'workid': workId,
 			'fcm_token': fcmToken,
 			'photo_url': photoUrl,
 			'customer_name': customerName,
@@ -64,7 +64,7 @@ class Account extends Equatable {
 	List<Object?> get props {
 		return [
 			customerId,
-			workid,
+			workId,
 			fcmToken,
 			photoUrl,
 			customerName,

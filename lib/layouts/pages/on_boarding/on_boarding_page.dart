@@ -1,17 +1,16 @@
+import 'dart:core';
+import 'dart:developer' as developer;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:work_id/constant/constant.dart';
 import 'package:work_id/layouts/pages/login/login_page.dart';
 import 'package:work_id/values/size_config.dart';
-import 'package:work_id/constant/constant.dart';
 import 'package:work_id/values/strings.dart';
-import 'package:work_id/values/style.dart';
-import 'dart:core';
+import 'package:get/get.dart';
 
 class OnBoarding extends StatelessWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => OnBoarding());
-  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -101,8 +100,14 @@ class _BodyState extends State<Body> {
                         Container(
                           padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                           width: SizeConfig.screenWidth,
-                          child: Styles.defaultButton("Explore", kPrimaryColor,
-                              () => onBoardLoadMore(currentPage)),
+                          child: ElevatedButton(
+                            onPressed: () => onBoardLoadMore(currentPage),
+                            child: Text('Explore'),
+                            style: ElevatedButton.styleFrom(
+                              primary: kPrimaryColor, // background
+                              onPrimary: Colors.white, // foreground
+                            ),
+                          ),
                         ),
                       ],
                     )),
@@ -125,6 +130,7 @@ class _BodyState extends State<Body> {
   }
 
   void onBoardLoadMore(int current) {
+    developer.log('onBoardLoadMore', name: '$current');
     if (current < onBoardContent.length - 1) {
       setState(() {
         controller.jumpToPage(current + 1);
@@ -137,13 +143,16 @@ class _BodyState extends State<Body> {
   }
 
   void moveToLogin() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+    Get.off(()=>LoginPage());
   }
 }
 
 class Content extends StatelessWidget {
-  const Content({required Key key,required this.title,required this.description,required this.image})
+  const Content(
+      {required Key key,
+      required this.title,
+      required this.description,
+      required this.image})
       : super(key: key);
   final String title, description, image;
 

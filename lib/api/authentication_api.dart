@@ -1,32 +1,25 @@
-import 'package:chopper/chopper.dart';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:work_id/constant/common.dart';
-import 'package:work_id/constant/key.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:work_id/models/account.dart';
+import 'package:work_id/models/authorization.dart';
+import 'package:work_id/models/server_user.dart';
 
-part 'authentication_api.chopper.dart';
+class AuthenticationApi {
+  static var client = http.Client();
 
-@ChopperApi(baseUrl: '/api/workid')
-abstract class AuthenticationApi extends ChopperService {
-  String apiKey = debuggingKey;
-  //Register user
-  @Post(path: 'auth/register')
-  Future<Response> registerUser(@Body() Account account);
+  static Future<ServerUser> registerUserToDatabase(Account body) async {
+    return http.post(
+      Uri.https(Common.baseUrl),
+      body: jsonEncode(body)
+    )
+  }
 
-  //Check whether user logged in
-  @Get(path: 'user-info?')
-  Future<Response> checkUserInfo(@Header('Authorization') String token,
-      {@Query('api_key') String apiKey = debuggingKey});
-
-  @Post(path: 'auth/login')
-  Future<Response> loginWithEmailAndPassword(
-      @Query('email') String email, @Query('password') String password,
-      {@Query('api_key') String apiKey = debuggingKey});
-
-  static AuthenticationApi create() {
-    final client = ChopperClient(
-        baseUrl: Common.baseUrl,
-        services: [_$AuthenticationApi()],
-        converter: JsonConverter());
-    return _$AuthenticationApi(client);
+  static Future<Authorization> getUserInfo() async {
+    var queries = {
+      ''
+    };
+    Uri uri = Uri.https(Common.baseUrl,"/api/workid/user-info?");
   }
 }
