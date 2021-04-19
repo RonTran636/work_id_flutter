@@ -5,4 +5,7 @@ class Strings{
   static String onBoardingTitle1 = "Free Video and Audio Conference Calls";
   static String onBoardingTitle2 = "A New Level of Safety to Match the Quality";
   static String onBoardingTitle3 = "An Easy-to-Use App that Fits Today’s Lifestyle";
+  static String termAndPrivacyStart = "By clicking Create my WorkID, you agree to our Terms and that you have read our ";
+  static String termAndPrivacyKey = "Privacy Policy";
+  static String termAndPrivacyEnd = ", including our Cookie Use.";
 }

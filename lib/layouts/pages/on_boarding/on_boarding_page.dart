@@ -181,7 +181,7 @@ class Content extends StatelessWidget {
           description,
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
-              fontSize: getProportionateScreenHeight(onBoardingDescriptionFont),
+              fontSize: getProportionateScreenHeight(smallFontSize),
               color: defaultGrey,
               fontWeight: FontWeight.normal),
         )
