@@ -1,15 +1,17 @@
+import 'dart:developer' as developer;
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:work_id/constant/constant.dart';
+import 'package:work_id/controllers/login_controller.dart';
+import 'package:work_id/layouts/pages/login/create_account_page.dart';
+import 'package:work_id/utils/string_utils.dart';
 import 'package:work_id/values/size_config.dart';
-import 'package:work_id/values/strings.dart';
 import 'package:work_id/values/style.dart';
 
 class LoginPage extends StatelessWidget {
@@ -34,14 +36,22 @@ class LoginPageBody extends StatefulWidget {
 }
 
 class _LoginPageBodyState extends State<LoginPageBody> {
-  late String _userEmail;
-  late String _userPassword;
   late bool _obscureText;
-
+  final loginController = Get.put(LoginController());
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   void initState() {
-    _obscureText = false;
+    _obscureText = true;
     super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,7 +75,10 @@ class _LoginPageBodyState extends State<LoginPageBody> {
               padding: const EdgeInsets.fromLTRB(
                   defaultMargin, defaultMargin, defaultMargin, 0),
               child: TextFormField(
-                  onSaved: (val) => val!=null? _userEmail = val : null,
+                  controller: emailController,
+                  validator: (input) => input!.isValidEmail()
+                      ? null
+                      : "Invalid email, please try again",
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -79,21 +92,32 @@ class _LoginPageBodyState extends State<LoginPageBody> {
             Padding(
                 padding: const EdgeInsets.all(defaultMargin),
                 child: TextFormField(
-                  onSaved: (val) => _userPassword = val!,
+                  controller: passwordController,
+                  keyboardType: TextInputType.text,
+                  obscureText: _obscureText,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       labelText: "Password",
                       prefixIcon: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: SvgPicture.asset("assets/icons/ic_lock.svg"),
+                          padding: const EdgeInsets.all(10),
+                          child: SvgPicture.asset("assets/icons/ic_lock.svg")),
+                      suffixIcon: IconButton(
+                        icon: Icon(_obscureText
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
                       )),
                 )),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, defaultMargin, 0),
               child: TextButton(
                   // Change method here
-                  onPressed: () {},
+                  onPressed: () => _showForgotPasswordPage,
                   child: Text("Forgot Password?",
                       style: GoogleFonts.roboto(
                           fontWeight: FontWeight.normal,
@@ -105,178 +129,26 @@ class _LoginPageBodyState extends State<LoginPageBody> {
                     defaultMargin, 0, defaultMargin, 0),
                 child: Container(
                     width: SizeConfig.screenWidth,
-                    child: Styles.defaultButton("Explore", kPrimaryColor,
-                        () => _loginWithEmailAndPassword()))),
+                    child: Styles.defaultButton(
+                        "Explore",
+                        kPrimaryColor,
+                        () => _loginWithEmailAndPassword(
+                            emailController.text, passwordController.text)))),
             Padding(
                 padding: const EdgeInsets.fromLTRB(
                     defaultMargin, defaultMargin, defaultMargin, 0),
                 child: Container(
                     width: SizeConfig.screenWidth,
                     child: Styles.defaultButton("Create an account",
-                        defaultOrange, () => _showSignUpBottomSheet()))),
+                        defaultOrange, () => _showSignUpPage()))),
           ],
         ),
       ),
     );
   }
 
-  _showSignUpBottomSheet() {
-    late String signUpEmail;
-    late String signUpPassword;
-    late String signUpDisplayName;
-    bool termChecked = true;
-    Get.bottomSheet(
-        Container(
-          height: SizeConfig.screenHeight * 0.965,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      0, defaultMargin, defaultMargin, 0),
-                  child: IconButton(
-                    onPressed: () => Get.back(),
-                    icon: Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: kPrimaryColor,
-                      size: 24.0,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      defaultMargin, defaultMargin, 0, 0),
-                  child: Text(
-                    "Create an account",
-                    style: GoogleFonts.roboto(
-                        fontSize: getProportionateScreenHeight(largeFontSize),
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(defaultMargin),
-                    child: TextFormField(
-                      onSaved: (value) => signUpEmail = value!,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          labelText: "Email",
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child:
-                                SvgPicture.asset("assets/icons/ic_email.svg"),
-                          )),
-                    )),
-                Padding(
-                    padding: const EdgeInsets.all(defaultMargin),
-                    child: TextFormField(
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          labelText: "Password",
-                          prefixIcon: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child:
-                                  SvgPicture.asset("assets/icons/ic_lock.svg")),
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureText
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          )),
-                      validator: (value) =>
-                          value!.length < 6 ? 'Password too short' : null,
-                      onSaved: (value) => signUpPassword = value!,
-                      obscureText: _obscureText,
-                    )),
-                Padding(
-                    padding: const EdgeInsets.all(defaultMargin),
-                    child: TextFormField(
-                      onSaved: (value) => signUpDisplayName = value!,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          labelText: "Display name",
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child:
-                                SvgPicture.asset("assets/icons/ic_person.svg"),
-                          )),
-                    )),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: defaultMargin),
-                      child: Checkbox(
-                          value: termChecked,
-                          onChanged: (value) => {
-                                setState(() {
-                                  termChecked = value!;
-                                })
-                              }),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(defaultMargin),
-                      width: SizeConfig.screenWidth * 0.85,
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                                text: Strings.termAndPrivacyStart,
-                                style: GoogleFonts.roboto(
-                                    color: kPrimaryColor,
-                                    fontSize: smallFontSize,
-                                    fontWeight: FontWeight.bold)),
-                            TextSpan(
-                                text: Strings.termAndPrivacyKey,
-                                style: GoogleFonts.roboto(
-                                    color: hyperlinkText,
-                                    fontSize: smallFontSize,
-                                    fontWeight: FontWeight.bold),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    //TODO add Privacy web view
-                                  }),
-                            TextSpan(
-                                text: Strings.termAndPrivacyEnd,
-                                style: GoogleFonts.roboto(
-                                    color: kPrimaryColor,
-                                    fontSize: smallFontSize,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(
-                      defaultMargin, defaultMargin, defaultMargin, 0),
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  width: SizeConfig.screenWidth,
-                  child: Styles.defaultButton(
-                      "Create my account",
-                      defaultOrange,
-                      () => _registerWithEmailAndPassword(
-                          signUpEmail, signUpPassword, signUpDisplayName)),
-                )
-              ],
-            ),
-          ),
-        ),
+  _showSignUpPage() {
+    Get.bottomSheet(CreateAccountPage(),
         backgroundColor: Colors.white,
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
@@ -284,8 +156,9 @@ class _LoginPageBodyState extends State<LoginPageBody> {
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))));
   }
 
-  _loginWithEmailAndPassword() {}
+  _loginWithEmailAndPassword(String email, String password) {
+    loginController.loginWithEmailAndPassword(email,password);
+  }
 
-  _registerWithEmailAndPassword(
-      String email, String password, String displayName) {}
+  _showForgotPasswordPage() {}
 }

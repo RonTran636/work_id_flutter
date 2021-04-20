@@ -1,50 +1,50 @@
 class Account {
-  String customerId;
-  String customerName;
-  String customerEmail;
-  String customerPhone;
-  String workId;
-  String photoUrl;
-  String password;
-  String fcmToken;
-  String lastSeen;
-  bool isOnline;
-  bool isActive;
-  String serverToken;
-  bool isMessagePinned;
-  bool strangerCall;
-  bool strangerInviteTopic;
-  bool strangerMessage;
-  int friendStatus = 0;
+  int? customerId;
+  String? customerName;
+  String? customerEmail;
+  String? customerPhone;
+  int? workId;
+  String? photoUrl;
+  String? password;
+  String? fcmToken;
+  String? lastSeen;
+  bool? isOnline;
+  bool? isActive;
+  String? serverToken;
+  bool? isMessagePinned;
+  bool? strangerCall = false;
+  bool? strangerInviteTopic = false;
+  bool? strangerMessage = false;
+  int? friendStatus = 0;
 
 //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   Account({
-    required this.customerId,
-    required this.customerName,
-    required this.customerEmail,
-    required this.customerPhone,
-    required this.workId,
-    required this.photoUrl,
-    required this.password,
-    required this.fcmToken,
-    required this.lastSeen,
-    required this.isOnline,
-    required this.isActive,
-    required this.serverToken,
-    required this.isMessagePinned,
-    required this.strangerCall,
-    required this.strangerInviteTopic,
-    required this.strangerMessage,
-    required this.friendStatus,
+     this.customerId,
+     this.customerName,
+     this.customerEmail,
+     this.customerPhone,
+     this.workId,
+     this.photoUrl,
+     this.password,
+     this.fcmToken,
+     this.lastSeen,
+     this.isOnline,
+     this.isActive,
+     this.serverToken,
+     this.isMessagePinned,
+     this.strangerCall,
+     this.strangerInviteTopic,
+     this.strangerMessage,
+     this.friendStatus,
   });
 
   Account copyWith({
-    required String customerId,
+    required int customerId,
     required String customerName,
     required String customerEmail,
     required String customerPhone,
-    required String workId,
+    required int workId,
     required String photoUrl,
     required String password,
     required String fcmToken,
@@ -129,23 +129,23 @@ class Account {
 
   factory Account.fromMap(Map<String, dynamic> map) {
     return new Account(
-      customerId: map['customer_id'] as String,
+      customerId: map['customer_id'] as int,
       customerName: map['customer_name'] as String,
       customerEmail: map['customer_email'] as String,
-      customerPhone: map['customer_phone'] as String,
-      workId: map['workid'] as String,
-      photoUrl: map['photo_url'] as String,
-      password: map['password'] as String,
+      customerPhone: map['customer_phone'] as String?,
+      workId: map['workid'] as int,
+      photoUrl: map['photo_url'] as String?,
+      password: map['password'] as String?,
       fcmToken: map['fcm_token'] as String,
-      lastSeen: map['last_login'] as String,
-      isOnline: map['is_online'] as bool,
-      isActive: map['is_active'] as bool,
-      serverToken: map['token'] as String,
-      isMessagePinned: map['is_pin'] as bool,
+      lastSeen: map['last_login'] as String?,
+      isOnline: map['is_online'] as bool?,
+      isActive: map['is_active'] as bool?,
+      serverToken: map['token'] as String?,
+      isMessagePinned: map['is_pin'] as bool?,
       strangerCall: map['only_friend_call'] as bool,
       strangerInviteTopic: map['only_friend_invite_topic'] as bool,
       strangerMessage: map['only_friend_chat'] as bool,
-      friendStatus: map['friend_status'] as int,
+      friendStatus: map['friend_status'] as int?,
     );
   }
 

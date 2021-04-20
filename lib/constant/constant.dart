@@ -6,7 +6,7 @@ const String USER_INFO ="currentUser";
 const String termAndPrivacyUrl = "workid.ca/policy";
 const String serverUrl = "workid.ca";
 const String socketUrl = "s.workid.ca";
-const String deBuggingServerUrl = "api.dev.workid.ca/";
+const String deBuggingServerUrl = "api.dev.workid.ca";
 const String deBuggingSocketUrl = "s.dev.workid.ca";
 
 //FONT SIZE
